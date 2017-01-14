@@ -35,7 +35,7 @@
         android:layout_above="@+id/button3">
 
         <ImageView
-            app:srcCompat="@drawable/question_man"
+            android:src="@drawable/question_man"
             android:id="@+id/imageView"
 
             android:layout_width="180dp"

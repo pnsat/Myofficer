@@ -1,11 +1,14 @@
 package sanghirun.yongyut.myofficer;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,8 +20,10 @@ public class SignUpActivity extends AppCompatActivity {
     private ImageView imageView;
     private EditText nameEditText, userEditText, passwordEditText;
     private Button button;
-    private String nameString, userString, passwordString;
+    private String nameString, userString, passwordString,
+            pathImageChooseString, nameImageChooseString;
     private Uri uri;
+    private boolean aBoolean = true;
 
 
 
@@ -50,6 +55,8 @@ public class SignUpActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
 
             uri = data.getData();
+            aBoolean = false;
+
 
             //show Image Choose to Imageview
             try {
@@ -103,6 +110,15 @@ public class SignUpActivity extends AppCompatActivity {
                     MyAlert myAlert = new MyAlert(SignUpActivity.this);
                     myAlert.errorDialog("Have Space", "Please Fill All Every Blank");
 
+                } else if (aBoolean) {
+                    //Non Choose Image
+                    MyAlert myAlert = new MyAlert(SignUpActivity.this);
+                    myAlert.errorDialog("ยังไม่เลือกรูปภาพ", "กรุณาเลือกรูปภาพด้วยค่ะ");
+
+                } else {
+                    // Every Thing Ok
+                    uploadDataToServer();
+
                 }
 
 
@@ -110,5 +126,32 @@ public class SignUpActivity extends AppCompatActivity {
             } //On Click
         });
     }
+
+    private void uploadDataToServer() {
+
+        //Find Path of Image Choose
+        String[] strings = new String[]{MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, strings, null, null, null);
+        if (cursor !=null) {
+            cursor.moveToFirst();
+            int i = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            pathImageChooseString = cursor.getString(i);
+
+
+        } else {
+            pathImageChooseString = uri.getPath();
+
+        }
+        Log.d("14janV1", "pathImage ==> " + pathImageChooseString);
+
+        //Find name of Image Choose
+        nameImageChooseString = pathImageChooseString.substring(pathImageChooseString.lastIndexOf("/"));
+        Log.d("14janV1", "nameImage ==> " + nameImageChooseString);
+
+
+
+    }  // Upload
+
+
 
 }   //Main Class
