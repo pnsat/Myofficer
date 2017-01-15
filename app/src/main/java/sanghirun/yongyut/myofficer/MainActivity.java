@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else {
             // Password True
+            startActivity(new Intent(MainActivity.this, ServiceActivity.class));
+            finish();
         }
 
     } // myAuthen
