@@ -8,12 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Explicit
     private Button signInButton, signUpButton;
     private EditText userEditText, passwordEditText;
-    private String userString, passwordString;
+    private String userString, passwordString, truePasswordString;
 
 
 
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Get value
         userString = userEditText.getText().toString().trim();
         passwordString = passwordEditText.getText().toString().trim();
+        Log.d("15janV1", "UserPass ==> " + passwordString);
 
         //Check User and Password
         if (userString.equals("") || passwordString.equals("")) {
@@ -67,6 +71,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else if (checkUser()) {
             //User False
+            MyAlert myAlert = new MyAlert(MainActivity.this);
+            myAlert.errorDialog("User False", "No This user in my database");
+        } else if (!passwordString.equals(truePasswordString)) {
+            MyAlert myAlert = new MyAlert(MainActivity.this);
+            myAlert.errorDialog("Password False", "Please try Again");
+
+        } else {
+            // Password True
         }
 
     } // myAuthen
@@ -82,12 +94,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String strJSON = synUser.get();
             Log.d("15janV1", "JSON ==>" + strJSON);
 
+            JSONArray jsonArray = new JSONArray(strJSON);
+            for (int i=0;i<jsonArray.length();i++) {
+
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (userString.equals(jsonObject.getString("User"))) {
+                    truePasswordString = jsonObject.getString("Password");
+                    Log.d("15janV1", "truePass ==> " + truePasswordString);
+                    result = false;  // User True
+                }
+
+            } //for
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return false;
+        return result;
 
     }
 }   // Main Class
