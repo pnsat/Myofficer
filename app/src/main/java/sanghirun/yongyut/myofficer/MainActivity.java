@@ -3,6 +3,7 @@ package sanghirun.yongyut.myofficer;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,7 +65,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             MyAlert myAlert = new MyAlert(MainActivity.this);
             myAlert.errorDialog("มีช่องว่าง", "กรุณากรอกทุกช่องค่ะ");
 
+        } else if (checkUser()) {
+            //User False
         }
 
     } // myAuthen
+
+    private boolean checkUser() {
+
+        boolean result = true; // User False
+
+        try {
+
+            SynUser synUser = new SynUser(MainActivity.this);
+            synUser.execute();
+            String strJSON = synUser.get();
+            Log.d("15janV1", "JSON ==>" + strJSON);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
 }   // Main Class

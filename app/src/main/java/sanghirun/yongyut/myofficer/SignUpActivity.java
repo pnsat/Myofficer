@@ -175,7 +175,7 @@ public class SignUpActivity extends AppCompatActivity {
             //Upload Text
             UpdateStringToServer updateStringToServer = new UpdateStringToServer(SignUpActivity.this,
                     nameString, userString, passwordString,
-                    "http://swiftcodingthai.com/14jan/YutImage/ + nameImageChooseString");
+                    "http://swiftcodingthai.com/14jan/YutImage" + nameImageChooseString);
             updateStringToServer.execute();
 
             if (Boolean.parseBoolean(updateStringToServer.get())) {
