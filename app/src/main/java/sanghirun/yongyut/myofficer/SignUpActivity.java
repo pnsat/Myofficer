@@ -161,6 +161,8 @@ public class SignUpActivity extends AppCompatActivity {
                     .Builder().permitAll().build();
             StrictMode.setThreadPolicy(threadPolicy);
 
+
+            //Upload Image
             SimpleFTP simpleFTP = new SimpleFTP();
             simpleFTP.connect("ftp.swiftcodingthai.com", 21,
                     "14jan@swiftcodingthai.com", "Abc12345");
@@ -169,6 +171,24 @@ public class SignUpActivity extends AppCompatActivity {
             simpleFTP.cwd("YutImage");
             simpleFTP.stor(new File(pathImageChooseString));
             simpleFTP.disconnect();
+
+            //Upload Text
+            UpdateStringToServer updateStringToServer = new UpdateStringToServer(SignUpActivity.this,
+                    nameString, userString, passwordString,
+                    "http://swiftcodingthai.com/14jan/YutImage/ + nameImageChooseString");
+            updateStringToServer.execute();
+
+            if (Boolean.parseBoolean(updateStringToServer.get())) {
+                // Upload  Success
+                finish();
+
+            } else {
+                //Un Success
+                MyAlert myAlert = new MyAlert(SignUpActivity.this);
+                myAlert.errorDialog("Upload False", "Please Try Again Upload False");
+
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
